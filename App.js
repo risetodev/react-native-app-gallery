@@ -9,12 +9,9 @@ import {
   TouchableHighlight,
   View,
   ViewPagerAndroid,
-  BackHandler
+  BackHandler,
+  AppRegistry
 } from "react-native";
-
-Permissions.askAsync(Permissions.CAMERA_ROLL)
-  .then(res => console.log("Access: " + res.status))
-  .catch(res => console.log("Access: " + res.status));
 
 export default class App extends React.Component {
   state = {
@@ -24,16 +21,21 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    CameraRoll.getPhotos({
-      first: 100,
-      assetType: "Photos"
-    })
-      .then(r => {
-        this.setState({ images: r.edges });
+    Permissions.askAsync(Permissions.CAMERA_ROLL)
+      .then(res => {
+        console.log("Access: " + res.status);
+        return CameraRoll.getPhotos({
+          first: 1000,
+          assetType: "Photos"
+        })
+          .then(r => {
+            this.setState({ images: r.edges });
+          })
+          .catch(err => {
+            console.log(err);
+          });
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(res => console.log("Access: " + res.status));
 
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (this.state.isPhotoFullScreen) {
@@ -107,7 +109,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   item: {
-    margin: 1,
+    marginBottom: 1,
+    marginRight: 1,
     height: Dimensions.get("window").width / 3,
     width: Dimensions.get("window").width / 3
   },
