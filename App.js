@@ -9,15 +9,15 @@ import {
   TouchableHighlight,
   View,
   ViewPagerAndroid,
-  BackHandler,
-  AppRegistry
+  BackHandler
 } from "react-native";
 
 export default class App extends React.Component {
   state = {
     images: [],
     isPhotoFullScreen: false,
-    selectedImage: null
+    selectedImage: null,
+    access: false
   };
 
   componentDidMount() {
